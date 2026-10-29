@@ -36,13 +36,7 @@
     myId: null,
     name: '',
     room: '',
-    iceServers: [
-      { urls: 'stun:stun.l.google.com:19302' },
-      { urls: 'stun:stun1.l.google.com:19302' },
-      { urls: 'stun:stun2.l.google.com:19302' },
-      { urls: 'stun:stun.stunprotocol.org:3478' },
-      { urls: 'stun:openrelay.metered.ca:80' }
-    ],
+    iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
     localStream: null,   // webcam + microfone
     screenStream: null,  // compartilhamento de tela (quando ativo)
     unread: 0,
@@ -139,11 +133,7 @@
     el.innerHTML = `
       <video autoplay playsinline></video>
       <div class="avatar"><span></span></div>
-      <div class="tile-label">
-        <span class="mic-icon" hidden>🔇</span>
-        <span class="tile-name"></span>
-        ${!local ? '<input type="range" class="volume-slider" min="0" max="1" step="0.05" value="1" title="Ajustar volume" style="width: 60px; margin-left: 8px; cursor: pointer;">' : ''}
-      </div>`;
+      <div class="tile-label"><span class="mic-icon" hidden>🔇</span><span class="tile-name"></span></div>`;
 
     const tile = {
       key, el,
@@ -153,23 +143,12 @@
       watching: false,
     };
     tile.video.muted = local; // nunca reproduzir o próprio áudio (evita eco)
-
-    // Vincula o controlo de volume se for um participante re
-    if (!local) {
-      const volSlider = el.querySelector('.volume-slider');
-      if (volSlider) {
-        volSlider.addEventListener('input', (e) => {
-          tile.video.volume = e.target.value;
-        });
-      }
-    }
-
     el.querySelector('.tile-name').textContent = label;
     const avatar = el.querySelector('.avatar span');
     avatar.textContent = (label.trim()[0] || '?').toUpperCase();
     avatar.style.setProperty('--av', colorFor(label));
 
-    // Duplo clique = ecrã cheio
+    // Duplo clique = tela cheia
     el.addEventListener('dblclick', () => {
       if (document.fullscreenElement) document.exitFullscreen();
       else if (el.requestFullscreen) el.requestFullscreen();
