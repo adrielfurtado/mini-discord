@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="dark" />
+  <title>Mini Discord</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===================== TELA INICIAL ===================== -->
+  <main id="join-screen" class="join">
+    <form id="join-form" class="join-card" autocomplete="off">
+      <h1>Mini Discord</h1>
+      <p class="sub">Vídeo, áudio e tela com a galera. Sem cadastro.</p>
+
+      <label>
+        Seu nome
+        <input id="name-input" type="text" maxlength="24" placeholder="Como te chamam?" required />
+      </label>
+
+      <label>
+        Nome da sala
+        <div class="row">
+          <input id="room-input" type="text" maxlength="40" placeholder="ex: resenha-da-noite" required />
+          <button type="button" id="random-room" class="secondary" title="Gerar nome de sala aleatório">🎲</button>
+        </div>
+      </label>
+
+      <button type="submit" id="join-btn" class="primary">Entrar na sala</button>
+      <p id="join-error" class="error" role="alert"></p>
+    </form>
+  </main>
+
+  <!-- ===================== SALA ===================== -->
+  <div id="app" class="app hidden">
+    <header class="topbar">
+      <div class="room-name"><span class="hash">#</span><span id="room-title"></span></div>
+      <div class="topbar-right">
+        <span id="count" class="count"></span>
+        <button id="copy-link" class="secondary small">🔗 Copiar link</button>
+      </div>
+    </header>
+
+    <div class="main">
+      <section class="stage"><div id="grid" class="grid"></div></section>
+
+      <aside id="chat" class="chat">
+        <div class="chat-header">Chat da sala</div>
+        <div id="messages" class="messages"></div>
+        <form id="chat-form" class="chat-form" autocomplete="off">
+          <input id="chat-input" type="text" maxlength="1000" placeholder="Enviar mensagem" />
+        </form>
+      </aside>
+    </div>
+
+    <footer class="controls">
+      <button id="btn-mic" class="ctl" title="Mutar/Desmutar microfone" aria-label="Microfone">🎙️</button>
+      <button id="btn-cam" class="ctl" title="Ligar/Desligar câmera" aria-label="Câmera">📷</button>
+      <button id="btn-screen" class="ctl" title="Compartilhar tela" aria-label="Compartilhar tela">🖥️</button>
+      <button id="btn-chat" class="ctl" title="Abrir/Fechar chat" aria-label="Chat">
+        💬<span id="chat-badge" class="badge hidden">0</span>
+      </button>
+      <button id="btn-leave" class="ctl leave" title="Sair da sala" aria-label="Sair">📞</button>
+    </footer>
+  </div>
+
+  <div id="toast" class="toast" role="status"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

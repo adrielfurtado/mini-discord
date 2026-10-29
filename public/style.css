@@ -1,0 +1,180 @@
+/* ==========================================================================
+   Mini Discord — tema escuro estilo Discord
+   ========================================================================== */
+:root {
+  --bg: #313338;
+  --bg-2: #2b2d31;
+  --bg-3: #1e1f22;
+  --bg-hover: #3a3c42;
+  --text: #f2f3f5;
+  --muted: #949ba4;
+  --accent: #5865f2;
+  --accent-hover: #4752c4;
+  --red: #ed4245;
+  --green: #23a559;
+  --radius: 12px;
+  --controls-h: 84px;
+}
+
+* { box-sizing: border-box; margin: 0; }
+html, body { height: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "gg sans", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  font-size: 15px;
+  overflow: hidden;
+}
+
+.hidden { display: none !important; }
+
+button { font: inherit; color: inherit; cursor: pointer; border: 0; }
+input {
+  font: inherit; color: var(--text); background: var(--bg-3);
+  border: 1px solid transparent; border-radius: 8px; padding: 11px 12px; width: 100%;
+}
+input:focus { outline: none; border-color: var(--accent); }
+
+/* ------------------------------ Tela inicial ----------------------------- */
+.join { min-height: 100dvh; display: grid; place-items: center; padding: 20px; background: var(--bg-3); }
+
+.join-card {
+  width: 100%; max-width: 420px; background: var(--bg); padding: 32px;
+  border-radius: 16px; display: flex; flex-direction: column; gap: 16px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, .45);
+}
+.join-card h1 { font-size: 26px; text-align: center; }
+.join-card .sub { color: var(--muted); text-align: center; margin-top: -8px; }
+.join-card label {
+  display: flex; flex-direction: column; gap: 8px;
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .02em; color: var(--muted);
+}
+.row { display: flex; gap: 8px; }
+
+.primary { background: var(--accent); padding: 12px; border-radius: 8px; font-weight: 600; }
+.primary:hover { background: var(--accent-hover); }
+.primary:disabled { opacity: .6; cursor: wait; }
+.secondary { background: #4e5058; padding: 0 14px; border-radius: 8px; }
+.secondary:hover { background: #6d6f78; }
+.secondary.small { padding: 7px 12px; font-size: 13px; }
+
+.error { color: var(--red); font-size: 14px; min-height: 1.2em; text-align: center; }
+
+/* ------------------------------ Layout da sala --------------------------- */
+.app { display: flex; flex-direction: column; height: 100dvh; }
+
+.topbar {
+  height: 48px; flex: none; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px; background: var(--bg); border-bottom: 1px solid var(--bg-3);
+}
+.room-name { font-weight: 700; display: flex; gap: 6px; align-items: center; min-width: 0; }
+.room-name span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hash { color: var(--muted); font-size: 20px; }
+.topbar-right { display: flex; gap: 12px; align-items: center; }
+.count { color: var(--muted); font-size: 13px; }
+
+.main { flex: 1; display: flex; min-height: 0; }
+.stage { flex: 1; min-width: 0; padding: 12px; background: var(--bg-3); }
+
+/* Grade dinâmica: --cols e --rows são calculadas pelo JavaScript */
+.grid {
+  height: 100%; display: grid; gap: 10px;
+  grid-template-columns: repeat(var(--cols, 1), minmax(0, 1fr));
+  grid-template-rows: repeat(var(--rows, 1), minmax(0, 1fr));
+}
+
+/* ------------------------------ Tiles de vídeo --------------------------- */
+.tile {
+  position: relative; min-height: 0; overflow: hidden;
+  background: var(--bg-2); border-radius: var(--radius);
+}
+.tile video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
+.tile.screen video { object-fit: contain; }                    /* tela: nunca corta a imagem */
+.tile.local:not(.screen) video { transform: scaleX(-1); }      /* webcam própria em espelho */
+
+/* Anel verde quando a pessoa está falando */
+.tile::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  border: 3px solid transparent; transition: border-color .15s;
+}
+.tile.speaking::after { border-color: var(--green); }
+
+/* Avatar mostrado quando a câmera está desligada */
+.avatar { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; background: var(--bg-2); }
+.tile.cam-off .avatar { display: flex; }
+.avatar span {
+  width: clamp(56px, 14vmin, 112px); aspect-ratio: 1; border-radius: 50%;
+  display: grid; place-items: center; font-weight: 600; font-size: clamp(24px, 6vmin, 48px);
+  background: var(--av, var(--accent));
+}
+
+.tile-label {
+  position: absolute; left: 10px; bottom: 10px; max-width: calc(100% - 20px);
+  display: flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px;
+  background: rgba(0, 0, 0, .65); font-size: 13px; font-weight: 500; z-index: 1;
+}
+.tile-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ------------------------------ Chat ------------------------------------- */
+.chat {
+  width: 320px; flex: none; display: flex; flex-direction: column;
+  background: var(--bg); border-left: 1px solid var(--bg-3);
+}
+.chat.collapsed { display: none; }
+.chat-header { padding: 14px 16px; font-weight: 700; border-bottom: 1px solid var(--bg-3); }
+
+.messages { flex: 1; overflow-y: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; }
+.msg-head { display: flex; align-items: baseline; gap: 8px; }
+.msg-name { font-weight: 600; }
+.msg-time { color: var(--muted); font-size: 11px; }
+.msg-text { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.35; }
+.msg.sys { color: var(--muted); font-size: 13px; font-style: italic; }
+
+.chat-form { padding: 12px; }
+
+/* ------------------------------ Controles -------------------------------- */
+.controls {
+  height: var(--controls-h); flex: none; display: flex; align-items: center; justify-content: center;
+  gap: 14px; padding-bottom: env(safe-area-inset-bottom); background: var(--bg-3);
+}
+.ctl {
+  position: relative; width: 52px; height: 52px; border-radius: 50%;
+  background: #383a40; font-size: 22px; display: grid; place-items: center;
+  transition: background .15s, transform .1s;
+}
+.ctl:hover { background: var(--bg-hover); }
+.ctl:active { transform: scale(.94); }
+.ctl.off { background: var(--red); }          /* mic/câmera desligados */
+.ctl.active { background: var(--green); }     /* compartilhando tela */
+.ctl.leave { background: var(--red); rotate: 135deg; }   /* 📞 girado = "desligar" */
+.ctl.leave:hover { background: #c93b3e; }
+.ctl:disabled { opacity: .4; cursor: not-allowed; }
+
+.badge {
+  position: absolute; top: -2px; right: -2px; min-width: 18px; height: 18px; padding: 0 5px;
+  border-radius: 9px; background: var(--red); color: #fff; font-size: 11px; font-weight: 700;
+  display: grid; place-items: center;
+}
+
+/* ------------------------------ Toast ------------------------------------ */
+.toast {
+  position: fixed; left: 50%; bottom: calc(var(--controls-h) + 16px); transform: translate(-50%, 20px);
+  background: #111214; color: var(--text); padding: 10px 16px; border-radius: 8px; font-size: 14px;
+  max-width: min(92vw, 460px); text-align: center; opacity: 0; pointer-events: none; z-index: 50;
+  transition: opacity .2s, transform .2s;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ------------------------------ Responsivo ------------------------------- */
+@media (max-width: 720px) {
+  .stage { padding: 8px; }
+  .grid { gap: 8px; }
+  .controls { gap: 10px; }
+  .ctl { width: 48px; height: 48px; }
+  /* No celular o chat vira um painel por cima da grade */
+  .chat {
+    position: fixed; inset: 48px 0 var(--controls-h) 0; width: auto; z-index: 20; border-left: 0;
+  }
+  #copy-link { display: none; }
+}
