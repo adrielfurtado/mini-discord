@@ -154,7 +154,7 @@
     };
     tile.video.muted = local; // nunca reproduzir o próprio áudio (evita eco)
 
-    // Vincula o controlo de volume se for um participante remoto
+    // Vincula o controlo de volume se for um participante re
     if (!local) {
       const volSlider = el.querySelector('.volume-slider');
       if (volSlider) {
