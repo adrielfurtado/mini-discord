@@ -153,8 +153,8 @@
       watching: false,
     };
     tile.video.muted = local; // nunca reproduzir o próprio áudio (evita eco)
-    
-    // Vincula o controle de volume se for um participante remoto
+
+    // Vincula o controlo de volume se for um participante remoto
     if (!local) {
       const volSlider = el.querySelector('.volume-slider');
       if (volSlider) {
@@ -169,7 +169,7 @@
     avatar.textContent = (label.trim()[0] || '?').toUpperCase();
     avatar.style.setProperty('--av', colorFor(label));
 
-    // Duplo clique = tela cheia
+    // Duplo clique = ecrã cheio
     el.addEventListener('dblclick', () => {
       if (document.fullscreenElement) document.exitFullscreen();
       else if (el.requestFullscreen) el.requestFullscreen();
