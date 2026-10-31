@@ -109,12 +109,22 @@ input:focus { outline: none; border-color: var(--accent); }
   background: var(--av, var(--accent));
 }
 
+/* ------------------------------ Controles do Vídeo ----------------------- */
 .tile-label {
   position: absolute; left: 10px; bottom: 10px; max-width: calc(100% - 20px);
-  display: flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px;
-  background: rgba(0, 0, 0, .65); font-size: 13px; font-weight: 500; z-index: 1;
+  display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 6px;
+  background: rgba(0, 0, 0, .75); font-size: 13px; font-weight: 500; z-index: 1;
 }
 .tile-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.volume-slider { width: 65px; cursor: pointer; accent-color: var(--accent); }
+
+.fullscreen-btn {
+  background: rgba(255,255,255,0.1); color: #fff; border-radius: 4px;
+  width: 24px; height: 24px; display: grid; place-items: center; font-size: 14px;
+  transition: background 0.2s;
+}
+.fullscreen-btn:hover { background: rgba(255,255,255,0.3); }
 
 /* ------------------------------ Chat ------------------------------------- */
 .chat {

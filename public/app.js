@@ -130,10 +130,17 @@
 
     const el = document.createElement('div');
     el.className = 'tile' + (local ? ' local' : '') + (screen ? ' screen' : '');
+    
+    // Novo layout com botão de tela cheia (⛶) e slider de volume para amigos
     el.innerHTML = `
       <video autoplay playsinline></video>
       <div class="avatar"><span></span></div>
-      <div class="tile-label"><span class="mic-icon" hidden>🔇</span><span class="tile-name"></span></div>`;
+      <div class="tile-label">
+        <span class="mic-icon" hidden>🔇</span>
+        <span class="tile-name"></span>
+        ${!local ? '<input type="range" class="volume-slider" min="0" max="1" step="0.05" value="1" title="Ajustar volume da pessoa">' : ''}
+        <button class="fullscreen-btn" title="Tela Cheia">⛶</button>
+      </div>`;
 
     const tile = {
       key, el,
@@ -142,17 +149,34 @@
       speakTimer: null,
       watching: false,
     };
-    tile.video.muted = local; // nunca reproduzir o próprio áudio (evita eco)
+    tile.video.muted = local; // Impede o próprio eco
+
+    // Controle de volume (apenas para os outros participantes)
+    if (!local) {
+      const volSlider = el.querySelector('.volume-slider');
+      if (volSlider) volSlider.addEventListener('input', (e) => tile.video.volume = e.target.value);
+    }
+
     el.querySelector('.tile-name').textContent = label;
     const avatar = el.querySelector('.avatar span');
     avatar.textContent = (label.trim()[0] || '?').toUpperCase();
     avatar.style.setProperty('--av', colorFor(label));
 
-    // Duplo clique = tela cheia
+    // Mantém o duplo clique nativo por conveniência
     el.addEventListener('dblclick', () => {
       if (document.fullscreenElement) document.exitFullscreen();
       else if (el.requestFullscreen) el.requestFullscreen();
     });
+
+    // Evento exclusivo do novo botão de tela cheia
+    const fsBtn = el.querySelector('.fullscreen-btn');
+    if (fsBtn) {
+      fsBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // Evita conflitos com outros cliques no vídeo
+        if (document.fullscreenElement) document.exitFullscreen();
+        else if (el.requestFullscreen) el.requestFullscreen();
+      });
+    }
 
     tiles.set(key, tile);
     ui.grid.appendChild(el);
