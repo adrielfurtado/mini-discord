@@ -14,7 +14,7 @@ function createWindow() {
   });
 
   // Carrega o teu link oficial do Render
-  win.loadURL('https://mini-discord-imuv.onrender.com');
+  win.loadURL('https://mini-discord-iwuv.onrender.com');
 }
 
 app.whenReady().then(() => {
